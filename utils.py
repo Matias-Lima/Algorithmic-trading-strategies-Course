@@ -86,24 +86,18 @@ def carrega_vector_store():
     try:
         api_key = _get_api_key_or_fail()
 
-        # Novo cliente oficial da OpenAI (evita erro de 'proxies')
-        from openai import OpenAI
-        client = OpenAI(api_key=api_key)
-
-        # Embeddings compatíveis
+        # Inicializa embeddings corretamente (sem criar client manual)
         embedding_model = OpenAIEmbeddings(
-            client=client,
-            model="text-embedding-3-small"
+            model="text-embedding-3-small",
+            api_key=api_key
         )
 
-        # Carrega o índice FAISS local
         vector_store = FAISS.load_local(
             INDEX_DIR,
             embedding_model,
             allow_dangerous_deserialization=True,
         )
 
-        # Sanitiza documentos
         _sanitize_vector_store_docs(vector_store)
         return vector_store
 
