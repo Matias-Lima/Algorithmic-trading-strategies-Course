@@ -21,6 +21,7 @@ yfinance==0.2.43
 
 # === Streamlit App Environment ===
 streamlit==1.38.0
+rich==13.9.2
 streamlit-code-editor==0.1.21
 streamlit-option-menu==0.3.13
 tiktoken==0.7.0
