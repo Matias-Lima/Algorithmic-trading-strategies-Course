@@ -1,4 +1,14 @@
 import streamlit as st
+
+
+import streamlit as st
+import importlib.util
+from pathlib import Path
+
+
+import streamlit as st
+import runpy
+
 # Configuração da página
 st.set_page_config(page_title="Guia Conceitual - Algorithmic Trading ", layout="wide")
 
@@ -67,24 +77,27 @@ if mode == "Navegação":
                 "Cross-Sectional Mean Reversion",
                 "Conclusão"
             ],
-            "6 . Reversão à Média de Moedas e Futuros": [
-                "Introdução",
-                "Trading Pairs",
-                "Scalping",
-                "Futures Intermarket Spreads"
+              "6 . Reversão à Média de Moedas e Futuros": [
+                  "Introdução",
+                  "Negociação de Pares de Moedas",
+                  "Taxas Cruzadas de Moedas",
+                  "Operando Calendar Spread com Futuros",
+                  "Spreads Intermercado com Futuros",
+                  "Conclusão"
             ],
             "7 . Estratégias de Momentum Interdiário": [
-                "Introdução",
-                "Tests for Time Series Momentum",
-                "Time Series Strategies",
-                "Extracting Roll Returns",
-                "Cross sectio",
-                "Pros and Cons of Momentum Strategies",
-                "Conclusão"
+                  "Introdução",
+                  "Testes para Momentum em Séries Temporais",
+                  "Estratégias de Séries Temporais",
+                  "Extraindo Retornos de Rolagem",
+                  "Estratégias Cross-Sectional",
+                  "Prós e Contras das Estratégias de Momentum",
+                  "Conclusão"
             ],
             "8 . Estratégias de Momentum Intradiário": [
                 "Introdução",
                 "Opening Gap Strategy",
+                "News Sentiment",
                 "Leveraged ETF Strategy",
                 "Estratégias de Alta Frequência",
                 "Conclusão"
@@ -110,7 +123,7 @@ if mode == "Navegação":
         st.title("Introdução ao Algoritmo Trading")
         
         st.markdown(r"""
-        Este curso oferece um guia prático sobre estratégias de trading algorítmico que podem ser implementadas tanto por traders individuais quanto institucionais. Diferente de abordagens puramente teóricas, o foco está em estratégias que realmente são usadas no mercado.
+        Este curso oferece um guia prático sobre estratégias de trading que podem ser implementadas tanto por traders individuais quanto institucionais. Diferente de abordagens puramente teóricas, o foco está em estratégias que realmente são usadas no mercado.
                     
         Vamos explorar uma ampla gama de estratégias, divididas em dois grandes grupos: estratégias de reversão à média e estratégias de momentum. Cada categoria será explicada em detalhes, com ênfase tanto nas técnicas padrão de trading quanto nos fundamentos que justificam o funcionamento dessas estratégias.
                     
@@ -198,7 +211,7 @@ if mode == "Navegação":
             """)
 
         elif subsecao == "A Importância do Backtesting":
-            st.markdown("""              
+            st.markdown(r"""              
         Backtesting é o processo de aplicar dados históricos a uma estratégia de trading para verificar como ela teria se comportado no passado. A ideia é que, se a estratégia funcionou bem com dados históricos, isso pode ser um indicativo de que ela também funcionará no futuro. A importância desse processo é evidente, especialmente quando desenvolvemos uma estratégia do zero. Queremos saber como ela teria performado antes de arriscarmos dinheiro real. Mesmo ao usar uma estratégia de uma publicação confiável, ainda é essencial realizar o backtesting por conta própria.
                                 
         ### Por que fazer backtesting mesmo com estratégias publicadas?
@@ -223,9 +236,9 @@ if mode == "Navegação":
         4. Teste Out-of-Sample (Fora da Amostra): Uma das grandes vantagens de fazer o backtesting de uma estratégia publicada é a possibilidade de realizar um verdadeiro teste fora da amostra. Isso significa testar o desempenho da estratégia em um período de tempo após sua publicação. Se os resultados forem ruins nesse período, é um sinal de que a estratégia pode ter funcionado apenas em um conjunto limitado de dados. Isso é mais importante do que parece. Alguns autores podem ajustar seus modelos para que pareçam bons mesmo com dados fora da amostra.
 
         5. Refinar e Melhorar a Estratégia: Ao backtestar uma estratégia, podemos encontrar maneiras de refiná-la, tornando-a mais lucrativa ou menos arriscada. O processo de backtesting deve seguir o método científico:
-                * Começamos com uma hipótese sobre uma oportunidade de arbitragem (baseada em nossa intuição ou em uma pesquisa).
-                * Em seguida, confirmamos ou refutamos essa hipótese com um backtest.
-                Se os resultados não forem bons, podemos modificar nossa hipótese e repetir o processo.
+            * Começamos com uma hipótese sobre uma oportunidade de arbitragem (baseada em nossa intuição ou em uma pesquisa).
+            * Em seguida, confirmamos ou refutamos essa hipótese com um backtest.
+            Se os resultados não forem bons, podemos modificar nossa hipótese e repetir o processo.
 
         Alterações simples, como ajustar o período de tempo para calcular a média móvel ou mudar o momento de entrada das ordens, podem melhorar significativamente o desempenho da estratégia.
                     """)
@@ -238,7 +251,7 @@ if mode == "Navegação":
             #### Look-ahead Bias
             Look-ahead bias ocorre quando o programa de backtesting utiliza informações futuras, como os preços de amanhã, para determinar os sinais de negociação de hoje. Um exemplo comum é usar o preço máximo ou mínimo de um dia para definir um sinal de entrada no mesmo dia durante o backtesting, algo impossível de saber antes do fechamento do mercado. Esse viés é essencialmente um erro de programação, afetando apenas o backtesting, pois programas de negociação ao vivo não têm acesso a informações futuras.
 
-            Uma forma eficaz de evitar esse viés é garantir que o programa utilizado para backtesting e negociação ao vivo seja o mesmo, mudando apenas o tipo de dado fornecido (histórico para backtesting e dados ao vivo para negociação). Algumas plataformas permitem essa abordagem, e serão discutidas mais adiante no capítulo.
+            Uma forma eficaz de evitar esse viés é garantir que o programa utilizado para backtesting e negociação ao vivo seja o mesmo, mudando apenas o tipo de dado fornecido (histórico para backtesting e dados ao vivo para negociação). Algumas plataformas permitem essa abordagem, e serão discutidas mais adiante.
                         
             ---                               
             """)
@@ -329,7 +342,7 @@ if mode == "Navegação":
 
             st.divider()
             st.markdown(r"""
-                ### **Futures Continuous Contracts**
+                ### Futures Continuous Contracts
 
                 Contratos futuros possuem datas de vencimento, o que torna uma estratégia de trading focada em contratos futuros, como de petróleo bruto, uma combinação de várias operações em contratos diferentes. O momento de "rollover" (substituir o contrato próximo ao vencimento por um com prazo maior) pode variar: alguns preferem rolar contratos dias antes do vencimento, enquanto outros esperam por eventos como o cruzamento de interesse em aberto. Embora o rollover seja essencial, ele não contribui significativamente para os lucros, exceto pelo efeito do retorno de rolagem, discutido no Capítulo 5.
 
@@ -349,7 +362,7 @@ if mode == "Navegação":
 
             st.divider()
             st.markdown("""
-                ### Futures Close versus Settlement Prices**
+                ### Futures Close versus Settlement Prices
 
                 Os preços de fechamento diário fornecidos por provedores de dados de contratos futuros geralmente correspondem ao preço de liquidação ("settlement price") determinado pela bolsa, e não ao último preço negociado do dia. Mesmo em dias sem transações, os contratos futuros têm um preço de liquidação definido. 
 
@@ -475,7 +488,7 @@ P-Valor = 0.03682492317744812
             - **Conclusão**: A estratégia não é superior ao benchmark apropriado (buy-and-hold). Sempre compare estratégias com benchmarks relevantes.
 
             ##### Exemplo 3: "Buy-Low-Sell-High"  
-            Escolhe as 10 ações mais baratas no início do ano e as mantém por 12 meses, gerando 388% de retorno em 2001.  
+            Escolhe as 10 ações mais baratas no início do ano e as mantém por 12 meses, gerando 388% de retorno no final do periodo.  
             - **Problemas**: Estratégias como essa frequentemente utilizam bancos de dados com viés de sobrevivência, ignorando ações deslistadas. Isso infla os retornos, tornando-os irreais.  
             - **Conclusão**: Se os dados não incluem ações deslistadas, o resultado é suspeito e irrealizável.
 
@@ -681,10 +694,10 @@ P-Valor = 0.03682492317744812
             col1, col2 = st.columns(2)
             # Exibir a imagem do primeiro gráfico
             with col1:
-                st.image("img/usd_cad_serie.png", caption='Legenda: Este é o gráfico da função seno.', use_column_width=True)
+                st.image("img/usd_cad_serie.png", caption='Legenda: Este é o gráfico do par de moedas USD/CAD', use_column_width=True)
             # Exibir a imagem do segundo gráfico
             with col2:
-                st.write("Explicação da tabela e mais alguns pontos a serem adicionados")
+                st.write("")
 
 # ----------------------------------------------  
 
@@ -721,7 +734,7 @@ P-Valor = 0.03682492317744812
             - $H < 0,5$ indica uma série de preços revertendo à média.
             - $H > 0,5$ indica uma série de preços com tendência.
 
-            Quanto mais próximo de 0 o valor de $H$, mais forte é a reversão à média. Um valor de $H$ mais próximo de 1 indica uma forte tendência. No **Exemplo 2.2**, ao calcular o exponente de Hurst para o par USD/CAD, o valor de $H = 0,46$ foi obtido, sugerindo uma fraca reversão à média.
+            Quanto mais próximo de 0 o valor de $H$, mais forte é a reversão à média. Um valor de $H$ mais próximo de 1 indica uma forte tendência. Semelhante ao **Exemplo 2.1**, ao calcular o exponente de Hurst para o par USD/CAD, o valor de $H = 0,46$ foi obtido, sugerindo uma fraca reversão à média.
             '''
             st.write(latext)
 
@@ -780,7 +793,7 @@ P-Valor = 0.03682492317744812
             \frac{\text{Var}(z(t) - z(t-\tau))}{\text{Var}(z(t-1) - z(t-\tau-1))} = 1
             $$
 
-            No **Exemplo 2.3**, ao aplicar o teste à série USD/CAD, o valor de $p = 0,367$ foi obtido, indicando que há uma probabilidade de 37% de que a série seja um passeio aleatório. Como o valor de $p$ é maior que 10%, a hipótese nula (de que a série é um passeio aleatório) não pode ser rejeitada.
+            Ao aplicar o teste à série USD/CAD, o valor de $p = 0,367$ foi obtido, indicando que há uma probabilidade de 37% de que a série seja um passeio aleatório. Como o valor de $p$ é maior que 10%, a hipótese nula (de que a série é um passeio aleatório) não pode ser rejeitada.
 
             Esses testes, portanto, fornecem informações importantes sobre a natureza da série de preços e se podem ser explorados para estratégias de negociação baseadas na reversão à média ou em tendências.
             """)
@@ -932,7 +945,7 @@ Sabendo que $\lambda$ é negativo em um processo reversor à média, essa expres
                 st.image("img/simple_meanrev_strate.png", caption='Legenda: Estratégia e Trading Linear com Reversão à Média', use_column_width=True)
             # Exibir a imagem do segundo gráfico
             with col2:
-                st.write("Explicação da tabela e mais alguns pontos a serem adicionados")
+                st.write("")
 
 # ==================== Mean Reversion ========================
 
@@ -1542,17 +1555,8 @@ Neste modelo, o Filtro de Kalman é aplicado a uma única série de preços com 
 O modelo de market making com Filtro de Kalman oferece uma forma robusta de estimar dinamicamente o preço médio e a volatilidade de um ativo, ajustando o peso dado às novas observações com base em seu tamanho e recência. Essa técnica permite aos market makers reagir de forma mais precisa às mudanças no mercado, integrando informações de volume e tempo para definir um preço "justo" de forma contínua.
 """)
 
-
-
-
-
-
-
-
-
-
         elif subsecao == "Erros nos Dados":
-            st.markdown("""
+            st.markdown(r"""
         ### **O Perigo dos Erros nos Dados**
 
         Erros nos dados podem comprometer significativamente estratégias de reversão à média, tanto em **backtesting** quanto na **execução ao vivo**. Pequenas falhas ou outliers nos preços históricos podem gerar oportunidades fictícias de lucro, inflando os resultados do backtest. Por exemplo, um registro de preço incorreto, que apareça muito acima do valor real, pode induzir a estratégia a sugerir uma venda a descoberto lucrativa que jamais ocorreria no mercado real.
@@ -1564,7 +1568,7 @@ O modelo de market making com Filtro de Kalman oferece uma forma robusta de esti
         ##### Problemas na Execução ao Vivo
         - **Erros nas Cotações Bid/Ask**: Um erro que inflacione os preços de compra ou venda pode levar a ordens equivocadas, causando perdas reais.  
         - **Impacto em Pairs Trading e Arbitragem**: Estratégias que dependem de pequenas variações entre os preços dos ativos são particularmente vulneráveis. Um erro em uma das cotações pode aumentar artificialmente o spread, acionando negociações erradas.  
-        - *Exemplo*: Se o spread real entre dois ativos for $5, mas um erro o faça parecer $6, um trade indevido pode ser executado, resultando em prejuízo.
+        - *Exemplo*: Se o spread real entre dois ativos for \$5 , mas um erro o faça parecer \$6 , um trade indevido pode ser executado, resultando em prejuízo.
 
         ##### Mitigação dos Erros
         - **Utilização de Feeds de Dados Confiáveis**: A escolha de fontes de dados robustas é crucial. Feeds de terceiros, como **Bloomberg** ou **Yahoo! Finance**, geralmente oferecem maior estabilidade e precisão.  
@@ -1575,7 +1579,7 @@ O modelo de market making com Filtro de Kalman oferece uma forma robusta de esti
 
         elif subsecao == "Conclusão":
             st.markdown("""
-        ### Key Points: Mean-Reverting Strategies and Practical Considerations**
+        ### Key Points: Mean-Reverting Strategies and Practical Considerations
 
         **Construção de Portfólios**:  
         - Para um portfólio de reversão à média com um **número fixo de ações**, utilize **séries de preços** para calcular os hedge ratios.  
@@ -1718,14 +1722,13 @@ Embora a negociação de pares de ações tenha perdido rentabilidade nos EUA, *
             Essa estratégia ilustra como a **reversão à média pode existir em períodos específicos**, mesmo que não ocorra em amostragens diárias regulares.  
             """)
 
+            colab_link = "https://colab.research.google.com/drive/1g4MIlioNhdUnepXnGlcX2sVoLQA-zTQ7?usp=sharing"  # Coloque o link do Colab aqui
+            st.markdown(f"[Clique aqui para editar um exemplo no Colab]({colab_link})")
 
-
-
-
-
-
-            mostrar_imagem("https://example.com/imagem_scalping.png", "Scalping")
+            #mostrar_imagem("https://example.com/imagem_scalping.png", "Scalping")
         
+
+
         elif subsecao == "Arbitragem entre um ETF e suas Ações Componentes":
             st.markdown("""
             ## **Arbitragem entre um ETF e suas Ações Componentes**  
@@ -1747,12 +1750,6 @@ Embora a negociação de pares de ações tenha perdido rentabilidade nos EUA, *
             - Determinar **hedge ratios** para manter o portfólio estacionário.  
             - Definir janelas de look-back para cálculo da média móvel e volatilidade.  
 
-            ### **Resultados do Backtest**  
-            - **Período:** 2 de janeiro de 2008 a 9 de abril de 2012.  
-            - **Taxa de retorno anualizada (APR):** 4,5%.  
-            - **Sharpe Ratio:** 1,3.  
-            - **Observação:** A performance se deteriora ao longo do tempo devido à falta de atualização dinâmica dos hedge ratios.  
-
             ### **Considerações Importantes**  
             - **Alternativa ao Index Arbitrage:** A estratégia pode ser aplicada **a qualquer ETF, índice ou subíndice** e pode utilizar futuros no lugar do ETF, desde que os preços sejam contemporâneos.  
             - **Evitar Riscos de Venda a Descoberto:**  
@@ -1765,55 +1762,69 @@ Embora a negociação de pares de ações tenha perdido rentabilidade nos EUA, *
             Essa estratégia é uma forma **mais flexível e eficiente** de explorar a arbitragem entre ETFs e seus ativos subjacentes, contornando algumas limitações do **index arbitrage tradicional**.  
             """)
 
-            mostrar_imagem("https://example.com/imagem_rompimento.png", "Estratégias de Rompimento")
+            colab_link = "https://colab.research.google.com/drive/1g4MIlioNhdUnepXnGlcX2sVoLQA-zTQ7?usp=sharing"  # Coloque o link do Colab aqui
+            st.markdown(f"[Clique aqui para editar um exemplo no Colab]({colab_link})")
 
         elif subsecao == "Cross-Sectional Mean Reversion":
-            st.markdown("""
-            ## **Reversão à Média Transversal: Modelo Linear Long-Short**
+            st.markdown(
+                """
+        ## Reversão à Média Transversal: Modelo Linear Long-Short
 
-            ### **Visão Geral**
-            A estratégia de **reversão à média transversal** busca explorar a anticorrelação serial dos **retornos relativos** das ações dentro de um universo (como S&P 500 ou Russell 2000). Ao contrário da reversão à média baseada em cointegração, que utiliza um conjunto fixo de ativos, essa abordagem **reajusta os pesos ou seleciona diferentes ações diariamente**.
+        ### Visão Geral
 
-            ### **Funcionamento da Estratégia**
-            - **Seleção e Alocação de Capital:**
-            - Para cada ação \(i\), calcula-se o retorno diário \(r_i\).
-            - O retorno médio de todas as ações no índice é calculado: \( 〈r_j〉 \).
-            - A alocação de capital para cada ação é determinada por:
+        A estratégia de **reversão à média transversal** explora a anticorrelação serial dos **retornos relativos** das ações em um universo (ex: S&P 500 ou Russell 2000). Diferente da reversão à média baseada em cointegração (que usa um conjunto fixo de ativos), esta abordagem **reajusta os pesos ou seleciona diferentes ações diariamente**.
 
-            \[
-            w_i = -\frac{(r_i - 〈r_j〉)}{\sum_k |r_k - 〈r_j〉|}
-            \]
+        ---
 
-            - Ações que tiveram retornos **acima da média** são **vendidas a descoberto**.
-            - Ações que tiveram retornos **abaixo da média** são **compradas**.
-            - O total de capital alocado é **sempre $1**, garantindo neutralidade de mercado.
+        ### Funcionamento da Estratégia
 
-            ### **Resultados**
-            - **Período:** 2 de janeiro de 2007 a 30 de dezembro de 2011.
-            - **APR:** 13,7%.
-            - **Sharpe Ratio:** 1,3.
-            - **Destaque:** Desempenho **forte em crises** (30$%$ de APR em 2008 e 11$%$ em 2011).
+        - **Seleção e Alocação de Capital:**
+            - Para cada ação \\(i\\), calcula-se o retorno diário \\(r_i\\).
+            - Calcula-se o retorno médio do universo.
+            - A alocação de capital para cada ação é dada por:
 
-            ### **Versão Intradiária**
-            - Modificação: Utiliza **retornos do fechamento anterior até a abertura** para definir os pesos, e liquida todas as posições no fechamento do mesmo dia.
-            - **Resultados:**
-            - **APR:** 73%.
-            - **Sharpe Ratio:** 4,7.
-            - **Desafios:** Maior custo de transação e maior sensibilidade a ruídos no preço de abertura.
+                $$
+                w_i = -\\frac{r_i - \\langle r_j \\rangle}{\\sum_k |r_k - \\langle r_j \\rangle|}
+                $$
 
-            ### **Aprimoramentos e Fatores Alternativos**
-            - Em vez de usar **retornos relativos**, podemos utilizar **fatores preditivos** como:
-            - **Índice P/L (Price/Earnings, P/E)**:  
-                - Ações com aumento nas **estimativas de lucros** tendem a manter retornos positivos.  
-                - Evitar shorting nesses casos melhora a robustez da estratégia.
+            - **Vende-se a descoberto** ações com retornos acima da média.
+            - **Compra-se** ações com retornos abaixo da média.
+            - O total de capital alocado é **sempre 1**, garantindo neutralidade de mercado.
 
-            ### **Considerações Finais**
-            - **Estratégia altamente flexível**, permitindo **seleção dinâmica de ativos**.
-            - A abordagem **transversal** é menos dependente do desempenho individual de cada ação.
-            - Pode ser complementada com **outras variáveis preditivas** para maior eficiência.
-            """)
+        ---
 
-            mostrar_imagem("https://example.com/imagem_rompimento.png", "Estratégias de Rompimento")
+        ### Versão Intradiária
+
+        - Utiliza **retornos do fechamento anterior até a abertura** para definir pesos.
+        - Todas as posições são liquidadas no fechamento do mesmo dia.
+        - **Resultados:**
+            - **APR:** 73%
+            - **Sharpe Ratio:** 4,7
+        - **Desafios:** Custos de transação maiores e maior sensibilidade a ruídos no preço de abertura.
+
+        ---
+
+        ### Aprimoramentos e Fatores Alternativos
+
+        - Além de **retornos relativos**, pode-se usar fatores preditivos:
+            - **Índice P/L (P/E):**
+                - Ações com aumento nas **estimativas de lucro** tendem a manter retornos positivos.
+                - Evitar short nesses casos pode tornar a estratégia mais robusta.
+
+        ---
+
+        ### Considerações Finais
+
+        - Estratégia **altamente flexível**, permite seleção dinâmica de ativos.
+        - Menos dependente do desempenho individual de cada ação.
+        - Pode ser aprimorada com **outras variáveis preditivas** para maior eficiência.
+
+        [🔗 Clique aqui para editar um exemplo no Colab](https://colab.research.google.com/drive/1g4MIlioNhdUnepXnGlcX2sVoLQA-zTQ7?usp=sharing)
+                """,
+                unsafe_allow_html=True
+            )
+
+
 
         elif subsecao == "Conclusão":
             st.markdown(r"""
@@ -1837,9 +1848,6 @@ Embora a negociação de pares de ações tenha perdido rentabilidade nos EUA, *
 - **A variável usada para classificar ações em uma estratégia de reversão à média transversal geralmente é o retorno relativo, mas pode incluir outros fatores fundamentais, como a relação P/L (Preço/Lucro).**
 
             """)
-
-            mostrar_imagem("https://example.com/imagem_rompimento.png", "Estratégias de Rompimento")
-
 # ===================== Chapter 4 Mean Reversion of  =============
 
 # ====================================================================================
@@ -1848,28 +1856,150 @@ Embora a negociação de pares de ações tenha perdido rentabilidade nos EUA, *
 # ===================== Chapter 5 Mean Reversion of Currencies and Futures =============
 
     elif pagina == "6 . Reversão à Média de Moedas e Futuros":
-        st.title("Táticas")
+        st.title("6 . Reversão à Média de Moedas e Futuros")
         if subsecao == "Introdução":
-            st.markdown("""
-            Explanação sobre as táticas mais usadas pelos traders, como tape reading, scalping e estratégias de rompimento.
+            st.markdown(r"""
+        ### Introdução
+        A sabedoria convencional diz que moedas e contratos futuros são território dos traders de momentum — e, em geral, isso é verdade. A maioria dos CTAs (Commodities Trading Advisors) utiliza estratégias baseadas em momentum.
+
+        Além disso, é raro encontrar pares de moedas ou futuros que apresentem cointegração, e portfólios desses ativos costumam **não** exibir reversão à média transversal. Ou seja, as oportunidades para estratégias de reversão à média nesses mercados são **limitadas**, mas não inexistentes.
+
+        Neste capítulo, vamos explorar exatamente **quando e onde** a reversão à média pode ser aplicada em moedas e futuros, destacando casos especiais como os spreads de calendário em futuros (calendar spreads). Em especial, será apresentada uma estratégia de trading envolvendo o spread entre futuros de volatilidade e futuros de índices de ações.
+
+        Também vamos discutir um modelo matemático simples para preços de futuros, ajudando a entender conceitos como:
+        - **Spot x Retorno de Rolagem (roll return)**
+        - **Backwardation x Contango**
+
+        Compreender esse modelo abre caminho para novas estratégias de trading com futuros — sem depender apenas de indicadores técnicos arbitrários.
+
+        Por fim, será abordado como operar moedas exige certos cuidados, diferentes do trading de ações. É preciso atenção especial ao testar cointegração entre moedas e ao calcular retornos de portfólios, garantindo que movimentos em diferentes pares tenham o **mesmo valor em dólares**. Além disso, os juros de rolagem (rollover) podem influenciar bastante o retorno total, dependendo do contexto.
+
+        Essas nuances e particularidades serão detalhadas ao longo desta seção.
+        """)
+
+ 
+        elif subsecao == "Negociação de Pares de Moedas":
+            st.markdown(r"""
+            ### Negociando Cross-Rates de Moedas
+
+            A ideia de formar um portfólio estacionário de moedas estrangeiras é semelhante à negociação de pares de ETFs de ações de diferentes países: procuramos países com fundamentos econômicos parecidos. Por exemplo, se ETFs de ações da Austrália (EWA) e do Canadá (EWC) apresentam cointegração, é razoável esperar que o dólar australiano (AUD) e o dólar canadense (CAD) também possam cointegrar. O mesmo pode acontecer com o dólar australiano (AUD) e o rand sul-africano (ZAR), já que ambos países têm forte presença no setor de mineração. Moedas como AUD, ZAR e a coroa norueguesa (NOK) são conhecidas como **moedas de commodities**.
+
+            #### Vantagens do Trading de Moedas
+
+            Negociar pares de moedas oferece diversas vantagens em relação aos pares de ETFs:
+            - **Alta liquidez**: Menores custos de transação devido a spreads mais estreitos.
+            - **Alavancagem elevada**: É possível operar com margens menores, mas atenção ao risco.
+            - **Sem restrição de venda a descoberto**.
+            - **Mercado 24h**: É possível operar praticamente cinco dias por semana, com mais oportunidades e uso eficiente de stop losses.
+
+            Apesar da semelhança conceitual com pares de ETFs, a **mecânica de operação em moedas é bem diferente**. Ao negociar um cross-rate como AUD.ZAR, AUD é a moeda base e ZAR é a moeda de cotação (quote). Por exemplo, uma cotação AUD.ZAR de 9,58 significa que são necessários 9,58 rands para comprar 1 dólar australiano.
+
+            #### Criação de Pares Sintéticos
+
+            Muitas corretoras não oferecem diretamente todos os cross-rates (ex: AUD.ZAR). Para negociar, geralmente é preciso montar um **par sintético** usando moedas mais líquidas (como USD ou EUR):
+
+            - Exemplo: Para negociar AUD.ZAR, pode-se comprar USD.ZAR e vender USD.AUD, formando o par sintético **USD.ZAR / USD.AUD**, que replica a cotação AUD.ZAR.
+
+            Ao operar esses pares, os lucros podem ficar denominados em diferentes moedas. Para que o P&L realizado reflita o backtest, é preciso **converter regularmente todos os saldos para a moeda local** (ex: USD para investidores americanos).
+
+            #### Estratégias Cointegradas e Hedge Ratio
+
+            Mesmo quando existe um cross-rate pronto (ex: AUD.CAD), pode ser vantajoso operar cada moeda separadamente usando AUD.USD versus USD.CAD, permitindo ajustar o hedge ratio de capital de forma ótima via o **teste de Johansen**. Para isso, ambos os pares devem estar na mesma moeda de cotação, garantindo que movimentos de preço tenham o mesmo valor em dólares.
+
+            No exemplo clássico do livro:
+            - O portfólio é construído usando os pesos do eigenvector do teste de Johansen entre AUD.USD e CAD.USD.
+            - Calcula-se o número de unidades a operar com base no desvio da média móvel (z-score).
+            - O P&L diário é calculado em USD, com retornos ajustados pelo valor de mercado do portfólio.
+
+            **Dica importante:** O maior desafio não é a estratégia em si, mas **preparar corretamente as séries de preços** para o teste de cointegração e calcular os retornos corretamente.
+
+            ---
             """)
-        elif subsecao == "Tape Reading":
+
+            st.markdown(r"""
+            ### Juros de Rolagem (Rollover) em Trading de Moedas
+
+            Ao operar pares de moedas (cross-rates), um fator importante é o **juros de rolagem** (“rollover interest”), que representa a diferença entre as taxas de juros das moedas do par quando a posição é mantida de um dia para o outro (após 17h de NY).
+
+            - **Cálculo:**  
+              Se você está comprado no par B.Q durante a noite, o juros de rolagem é:
+
+              $$
+              i_B - i_Q
+              $$
+
+              onde $i_B$ e $i_Q$ são as taxas de juros diárias das moedas B e Q.  
+              - Se $i_Q > i_B$, você **paga** juros (débito na conta).  
+              - Se $i_B > i_Q$, você **recebe** juros.
+
+            - **Finais de semana e feriados:**  
+              Devido ao sistema de liquidação (T+2), se você mantém a posição após 17h na quarta-feira, os juros de rolagem são multiplicados por 3 (referente a sexta, sábado e domingo).  
+              Existem exceções, como pares USD.CAD e USD.MXN, onde a liquidação é T+1.
+
+            #### Impacto no Backtesting e Sharpe Ratio
+
+            Ao calcular o Sharpe ratio, deve-se considerar **excess return** — ou seja, o retorno descontando o custo de financiamento.  
+            - Para estratégias **intraday** ou portfólios neutros em dólar (ações ou futuros), geralmente o custo é zero.  
+            - Para pares de moedas, o custo de financiamento é zero **apenas se** o juros de rolagem for incorporado no cálculo de retorno.
+
+            Por isso, o retorno excessivo diário ao manter uma posição de B.Q de $t$ para $t+1$ é:
+
+            $$
+            r_{t+1} = \log(y_{B.Q}(t+1)) - \log(y_{B.Q}(t)) + \log(1 + i_B(t)) - \log(1 + i_Q(t))
+            $$
+
+            Onde:
+            - $y_{B.Q}(t)$ é a cotação do par no tempo $t$  
+            - $i_B(t)$ e $i_Q(t)$ são as taxas de juros diárias  
+
+            #### Exemplo Prático: Estratégia de Reversão à Média com AUD.CAD e Rollover
+
+            - O exemplo usa uma estratégia simples de reversão à média no par pronto AUD.CAD, incorporando o juros de rolagem nos retornos.  
+            - As taxas diárias de juros (AUD e CAD) devem ser ajustadas para considerar rolagens múltiplas em determinados dias da semana.
+
+            **Resumo dos resultados:**  
+            - APR = 6,2%  
+            - Sharpe ratio = 0,54  
+            - Se ignorarmos o juros de rolagem, os resultados sobem levemente, mas a diferença pode ser relevante para estratégias de longo prazo.
+
+            **Conclusão:**  
+            Mesmo que o impacto dos juros de rolagem em estratégias de curto prazo seja pequeno, ele pode ser significativo ao longo do tempo. Por isso, sempre ajuste os retornos no backtest para refletir corretamente o efeito do rollover.
+
+            ---
+            """, unsafe_allow_html=True)
+
+
+
+
+        elif subsecao == "Taxas Cruzadas de Moedas":
+            
             st.markdown("""
-            Tape reading é uma técnica que envolve a leitura do fluxo de ordens e do livro de ofertas para prever movimentos de preços.
+                        
+            A negociação de pares de moedas baseia-se na mesma lógica da reversão à média aplicada a ETFs de índices de ações: buscar ativos que compartilham fundamentos econômicos semelhantes e que, portanto, exibem movimentos de preços cointegrados. Por exemplo, como EWA (ETF da Austrália) e EWC (ETF do Canadá) apresentam cointegração, é razoável supor que suas moedas — AUD (dólar australiano) e CAD (dólar canadense) — também possam se mover de forma correlacionada. Da mesma forma, moedas como AUD e ZAR (rand sul-africano), associadas a economias com forte dependência de commodities, são conhecidas como “commodity currencies”.
+
+            ### Vantagens do Trading de Moedas
+
+            O mercado cambial oferece vantagens significativas em relação ao mercado de ações: maior liquidez, menores custos de transação, ausência de restrições de venda a descoberto e operação contínua cinco dias por semana. Além disso, a alta alavancagem disponível amplia as oportunidades — embora também eleve o risco. A liquidez contínua permite ainda o uso eficiente de mecanismos de stop loss, o que seria inviável em mercados que permanecem fechados por longos períodos.
+
+            ### Estrutura e Mecânica das Operações
+
+            Em um par cambial como AUD.ZAR, AUD é a **moeda base** e ZAR é a **moeda cotada** — ou seja, AUD.ZAR = 9,58 significa que são necessários 9,58 rands para comprar 1 dólar australiano. Contudo, muitos corretores não oferecem diretamente esse cruzamento; por isso, cria-se uma **paridade sintética**, como USD.ZAR/USD.AUD. Nessa estrutura, o lucro ou prejuízo realizado envolve múltiplas moedas (ZAR e AUD) e precisa ser convertido regularmente para a moeda local do investidor (geralmente USD) para manter a coerência entre os resultados reais e os simulados no backtest.
+
+            ### Teste de Cointegração e Estratégia de Hedge
+
+            A estratégia exemplificada (Exemplo 5.1) utiliza o **teste de Johansen** para determinar o hedge ratio ideal entre pares como AUD.USD e CAD.USD, assegurando que ambos compartilhem a mesma moeda de cotação (USD) — condição essencial para que os movimentos de preço tenham o mesmo valor nominal. A partir da cointegração, constrói-se um portfólio linear reversor à média, no qual a exposição é ajustada dinamicamente conforme o desvio do spread em relação à sua média móvel.
+
+            Essa abordagem gera um portfólio com retornos estacionários, cujo desempenho pode ser medido em termos de **APR (Annual Percentage Return)** e **Sharpe Ratio**, indicadores que, no exemplo do autor, alcançaram 11% e 1,6, respectivamente. A principal complexidade dessa técnica não está na execução da estratégia, mas sim na preparação correta das séries de preços e na formulação precisa dos retornos.
+
             """)
-            mostrar_imagem("https://example.com/imagem_tape_reading.png", "Tape Reading")
-        elif subsecao == "Scalping":
+
+
+            st.divider()
+
+
+        elif subsecao == "Operando Calendar Spread com Futuros":
             st.markdown("""
-            Scalping é uma estratégia de curto prazo que busca obter pequenos lucros a partir de movimentos de preços muito pequenos.
-            """)
-            mostrar_imagem("https://example.com/imagem_scalping.png", "Scalping")
-
-
-
-
-        elif subsecao == "Futures Intermarket Spreads":
-            st.markdown("""
-                **Futures Intermarket Spreads**
+                ### **Futures Intermarket Spreads**
 
                 Intermarket spreads em contratos futuros envolvem pares de ativos subjacentes diferentes. Embora seja difícil encontrar spreads com comportamento de reversão à média, existem alguns candidatos interessantes, especialmente em mercados inter-relacionados.
 
@@ -1897,6 +2027,61 @@ Embora a negociação de pares de ações tenha perdido rentabilidade nos EUA, *
 
             mostrar_imagem("https://example.com/imagem_rompimento.png", "Estratégias de Rompimento")
 
+
+        elif subsecao == "Spreads Intermercado com Futuros":
+            st.markdown("""
+                        
+            A busca por **spreads intermercado** em contratos futuros — isto é, combinações de futuros sobre diferentes ativos subjacentes — visa identificar pares de mercados que se movam de forma correlacionada e possam apresentar **reversão à média**. Embora o conceito pareça simples, encontrar spreads verdadeiramente estacionários nesse contexto é uma tarefa desafiadora.
+
+            ### Spreads no Complexo de Energia
+
+            Um dos exemplos mais intuitivos de spreads intermercado surge no **complexo de energia**, que inclui contratos como o petróleo bruto WTI (CL), o Brent (BZ), a gasolina (RB) e o óleo para aquecimento (HO), todos negociados na NYMEX. Entre eles, destaca-se o conhecido **crack spread**, composto por uma posição **long** em três contratos de petróleo bruto (CL), **short** em dois contratos de gasolina (RB) e **short** em um contrato de óleo para aquecimento (HO). Essa proporção 3:2:1 reflete o processo físico de “cracking” do petróleo, no qual três barris de petróleo produzem aproximadamente dois de gasolina e um de óleo de aquecimento.  
+
+            A vantagem prática desse spread é que a NYMEX oferece um **contrato padronizado de crack spread**, com exigência de margem inferior à de operar os três contratos separadamente. No entanto, testes estatísticos — como o **ADF (Augmented Dickey-Fuller)** aplicado entre 2002 e 2012 — indicam que o spread **não é estacionário**. Durante esse período, o valor do spread apresentou forte alta entre março de 2007 e julho de 2008, seguida de uma queda acentuada, resultando em **retornos negativos** para estratégias lineares de reversão à média.
+
+            ### O Spread entre Brent e WTI
+
+            Outro candidato natural seria o spread entre **CL (WTI)** e **BZ (Brent)** em proporção 1:1, uma vez que ambos representam tipos de petróleo bruto. Contudo, testes de estacionariedade mostram que essa relação também **não apresenta reversão à média**. O Brent tem consistentemente superado o WTI, impulsionado por fatores estruturais e geopolíticos, como o aumento da produção norte-americana, gargalos logísticos em Cushing (Oklahoma) e o embargo ao petróleo iraniano em 2012, que afetou mais fortemente o mercado europeu.
+
+            ### Considerações Metodológicas
+
+            Ao realizar backtests de spreads intermercado, é essencial garantir que as **séries de preços sejam síncronas**. Por exemplo, antes de o Brent começar a ser negociado na NYMEX em 2001, ele era cotado na Intercontinental Petroleum Exchange de Londres, com horário de fechamento diferente do WTI. Usar preços de fechamento não alinhados temporalmente distorceria os resultados. Além disso, os preços devem ser devidamente **ajustados por fatores de conversão em dólares** e **corrigidos nos rollovers** para evitar saltos artificiais nas séries.
+
+            Apesar de as tentativas iniciais com o complexo de energia não indicarem spreads estacionários, o autor ressalta que existem **casos excepcionais** — explorados a seguir — em que estratégias de reversão à média podem, sim, ser aplicadas com sucesso no mercado de futuros.
+
+            """)
+
+          
+
+        elif subsecao == "Conclusão":
+            st.markdown(r"""
+            ### Pontos-Chave sobre Moedas e Futuros
+
+            - **Moedas de Commodities:**  
+              Moedas como AUD, CAD, ZAR e NOK frequentemente apresentam oportunidades de **cointegração** devido a fundamentos econômicos semelhantes (ex: exportação de commodities).
+
+            - **Cálculo de Retornos em Portfólios de Moedas:**  
+              Atenção ao combinar cross-rates: os retornos dependem se os pares compartilham a **mesma moeda base**, a **mesma moeda de cotação** ou **nenhuma das duas**.  
+              → As fórmulas de retorno mudam conforme o caso.
+
+            - **Retornos de Futuros:**  
+              Todo contrato futuro possui **dois componentes de retorno**:
+              1. **Spot return** (variação do ativo-spot).  
+              2. **Roll return** (diferença entre contratos de vencimentos distintos).
+
+            - **Backwardation vs. Contango:**  
+              - **Backwardation:** roll return **positivo** → contratos mais longos são **mais baratos** que os curtos.  
+              - **Contango:** roll return **negativo** → contratos mais longos são **mais caros** que os curtos.
+
+            - **Impacto do Roll Return:**  
+              A reversão à média do preço spot **não garante** reversão à média nos preços dos futuros — porque o roll return altera a dinâmica.
+
+            - **Calendar Spreads em Futuros:**  
+              A reversão à média de spreads de calendário só ocorre se o **roll return** for ele próprio estacionário (ou seja, reverter à média).  
+
+            ---
+            """)
+
 # ===================== Chapter 5 Mean Reversion of Currencies and Futures =============
 
 # ====================================================================================
@@ -1916,7 +2101,7 @@ Embora a negociação de pares de ações tenha perdido rentabilidade nos EUA, *
                 Momentum é uma ferramenta poderosa para trading, especialmente em futuros e ações, mas requer atenção às suas fragilidades e ao contexto de aplicação. A distinção entre estratégias interday e intraday permite adaptar os modelos a diferentes dinâmicas de mercado, maximizando retornos enquanto minimiza riscos associados às vulnerabilidades recentemente descobertas.
                 """)
 
-        elif subsecao == "Tests for Time Series Momentum":
+        elif subsecao == "Testes para Momentum em Séries Temporais":
 
            st.markdown("""
             
@@ -1949,10 +2134,10 @@ Embora a negociação de pares de ações tenha perdido rentabilidade nos EUA, *
             A escolha correta do período de look-back e holding é essencial para maximizar a eficácia de uma estratégia de momentum. O uso de múltiplos testes estatísticos permite identificar padrões robustos e evitar armadilhas de aleatoriedade nas séries temporais.
             """)
 
-           colab_link = "https://colab.research.google.com/drive/1728THYP3eXkGqXEDo1OjXhPiMRY_erqt?usp=sharing"  # Coloque o link do Colab aqui
+           colab_link = "https://colab.research.google.com/drive/1g-HL2ofAAB_hcgWXqSgg4vyf_sipGoyJ?usp=sharing"  # Coloque o link do Colab aqui
            st.markdown(f"[Clique aqui para editar no Colab]({colab_link})")
 
-        elif subsecao == "Time Series Strategies":
+        elif subsecao == "Estratégias de Séries Temporais":
            
            st.markdown("""
 **Time Series Strategies**
@@ -1971,17 +2156,19 @@ As estratégias de **time series momentum** exploram a correlação entre retorn
 ### Conclusão  
 Essa abordagem busca capturar tendências persistentes no mercado ao longo do tempo. A adaptação da frequência de negociação para decisões diárias pode suavizar a volatilidade e melhorar a eficiência do capital alocado na estratégia.
 """)
-           colab_link = "https://colab.research.google.com/drive/1728THYP3eXkGqXEDo1OjXhPiMRY_erqt?usp=sharing"  # Coloque o link do Colab aqui
+           colab_link = "https://colab.research.google.com/drive/1g-HL2ofAAB_hcgWXqSgg4vyf_sipGoyJ?usp=sharing"  # Coloque o link do Colab aqui
            st.markdown(f"[Clique aqui para editar no Colab]({colab_link})")
+
+
            
-        elif subsecao == "Extracting Roll Returns":
+        elif subsecao == "Extraindo Retornos de Rolagem":
 
             st.markdown("""
-**Extracting Roll Returns through Future versus ETF Arbitrage**
+### **Extracting Roll Returns through Future versus ETF Arbitrage**
 
 O retorno total de um contrato futuro é composto por **retorno do ativo à vista + roll return**. Dessa forma, podemos capturar o **roll return** através de uma estratégia de arbitragem entre o ativo subjacente e o contrato futuro correspondente. Se o **roll return for negativo** (contango), podemos **comprar o ativo e vender o futuro**. Se for **positivo** (backwardation), fazemos o oposto.
 
-### Arbitragem entre Futuros e ETFs  
+#### Arbitragem entre Futuros e ETFs  
 Para facilitar a execução da estratégia, em vez de comprar diretamente o ativo subjacente (o que pode ser complicado), utilizamos **ETFs** que possuem o ativo físico:
 - **Exemplo: Ouro (GLD vs. GC)**  
   - O ETF **GLD** detém ouro físico e acompanha o preço à vista do metal.  
@@ -1989,7 +2176,7 @@ Para facilitar a execução da estratégia, em vez de comprar diretamente o ativ
   - Estratégia: **Long GLD e Short GC** → Backtest mostrou retorno anualizado de **1,9%** com drawdown máximo de **0,8%** (2007-2010).  
   - **Problema**: O custo de financiamento de GLD praticamente elimina esse lucro.
 
-### Arbitragem Alternativa: ETFs de Empresas do Setor  
+#### Arbitragem Alternativa: ETFs de Empresas do Setor  
 Como a maioria das commodities **não possui ETFs com o ativo físico**, podemos usar ETFs de empresas que produzem a commodity como proxy:
 - **Exemplo: Energia (XLE vs. USO)**  
   - **XLE**: ETF do setor energético, composto por empresas relacionadas ao petróleo.  
@@ -1999,7 +2186,7 @@ Como a maioria das commodities **não possui ETFs com o ativo físico**, podemos
     - **Long USO e Short XLE quando CL estiver em backwardation.**  
   - **Resultado**: Retorno anualizado de **16%** (2006-2012) com **Sharpe ratio ≈ 1**.
 
-### Arbitragem com Índices Voláteis  
+#### Arbitragem com Índices Voláteis  
 Para futuros sem um ativo subjacente negociável, como o **VIX**, podemos buscar instrumentos correlacionados.  
 - **Exemplo: VIX (VX) e S&P 500 (SPY/ES)**  
   - O ETF **SPY** (S&P 500) tem alta correlação negativa com o VIX.  
@@ -2012,11 +2199,11 @@ A arbitragem entre ETFs e futuros pode ser uma forma eficiente de capturar **rol
             st.divider()
             
             st.markdown("""
-**Volatility Futures versus Equity Index Futures: Redux**
+### **Volatility Futures versus Equity Index Futures: Redux**
 
 Os futuros de volatilidade **VX** apresentam **roll returns altamente negativos** (até -50% anualizados) e são **altamente anticorrelacionados** com os futuros do índice **E-mini S&P 500 (ES)**, com um coeficiente de correlação de -75%. Em **Capítulo 5**, essa relação foi explorada para desenvolver uma **estratégia de reversão à média**. Aqui, utilizamos essa mesma dinâmica para construir uma **estratégia de momentum baseada no roll return**.
 
-### Estratégia Proposta por Simon e Campasano (2012)
+#### Estratégia Proposta por Simon e Campasano (2012)
 1. **Venda em Contango**:  
    - Se o preço do contrato futuro **VX** estiver **0.1 ponto acima do VIX** multiplicado pelo número de dias até o vencimento,  
    - **Short 0.3906 contratos de VX** e **Short 1 contrato de ES**.  
@@ -2027,31 +2214,30 @@ Os futuros de volatilidade **VX** apresentam **roll returns altamente negativos*
    - **Compra 0.3906 contratos de VX** e **Compra 1 contrato de ES**.  
    - **Segura a posição por 1 dia**.
 
-### Justificativa da Estratégia
+#### Justificativa da Estratégia
 - Se o preço do **VX** está **acima** do preço do **VIX**, isso indica um **roll return negativo** → **Vendemos VX**.  
 - Se o preço do **VX** está **abaixo** do preço do **VIX**, isso indica um **roll return positivo** → **Compramos VX**.  
 
-### Ajustes e Resultados
+#### Ajustes e Resultados
 - A razão de hedge usada na estratégia é baseada em uma **regressão entre os preços** de VX e ES (e não entre os retornos, como no estudo original).  
 - O período de backtest (29/07/2010 - 07/05/2012) gerou um **APR de 6.9%** com um **Sharpe Ratio de 1**.  
-- O código MATLAB para a estratégia está disponível em **VX_ES_rollreturn.m**.
 
-### Conclusão
+#### Conclusão
 A estratégia explora a **relação entre o roll return de VX e a dinâmica de ES**, aproveitando a **forte anticorrelação** entre os dois ativos para gerar lucros consistentes. O modelo ajustado mostrou desempenho estável, sugerindo que a abordagem pode ser utilizada para operar futuros de volatilidade de forma sistemática.
 """)
 
 
-            colab_link = "https://colab.research.google.com/drive/1728THYP3eXkGqXEDo1OjXhPiMRY_erqt?usp=sharing"  # Coloque o link do Colab aqui
+            colab_link = "https://colab.research.google.com/drive/1g-HL2ofAAB_hcgWXqSgg4vyf_sipGoyJ?usp=sharing"  # Coloque o link do Colab aqui
             st.markdown(f"[Clique aqui para editar no Colab]({colab_link})")
             
-        elif subsecao == "Cross-Sectional Strategies":
+        elif subsecao == "Estratégias Cross-Sectional":
             
             st.markdown("""
-**Cross-Sectional Strategies**
+### **Cross-Sectional Strategies**
 
 Além de comprar e segurar futuros ou utilizá-los em arbitragem contra ativos subjacentes, uma terceira abordagem para capturar **roll returns** é o uso de **estratégias cross-sectional**. Esse método consiste em **comprar futuros em backwardation** e **vender a descoberto futuros em contango**, esperando que os retornos dos preços à vista se neutralizem e que reste apenas o **ganho proveniente dos roll returns**.
 
-### **Estratégia de Momentum Cross-Sectional**  
+#### **Estratégia de Momentum Cross-Sectional**  
 Inspirada no modelo de **Daniel & Moskowitz (2011)**, essa estratégia segue uma abordagem semelhante à estratégia de reversão à média proposta por **Khandani & Lo**, mas com períodos de **look-back e holding muito mais longos**:
 1. **Ranking de Commodities**:  
    - Ordena-se **52 commodities físicas** com base no **retorno dos últimos 12 meses (252 dias de negociação)**.  
@@ -2062,7 +2248,7 @@ Inspirada no modelo de **Daniel & Moskowitz (2011)**, essa estratégia segue uma
    - De **junho de 2005 a dezembro de 2007**, a estratégia teve um **APR de 18%** e um **Sharpe Ratio de 1.37**.  
    - No entanto, sofreu um colapso durante a **crise financeira de 2008-2009**, com um **APR de -33%** nesse período.  
 
-### **Expansão da Estratégia para Outros Mercados**  
+#### **Expansão da Estratégia para Outros Mercados**  
 Daniel & Moskowitz demonstraram que essa abordagem funciona para **várias classes de ativos**, incluindo:  
 - **Índices de ações globais**  
 - **Moedas**  
@@ -2073,32 +2259,32 @@ A persistência do momentum nesses mercados não pode ser explicada apenas pelo 
 - **Correlação serial no crescimento econômico global** (afeta moedas e índices).  
 - **Difusão lenta de informações no mercado de ações** (impacta o momentum em ações).  
 
-### **Aplicação da Estratégia em Ações (Cross-Sectional Momentum para Stocks)**  
+#### **Aplicação da Estratégia em Ações (Cross-Sectional Momentum para Stocks)**  
 - Compra-se ações no **topo do decil dos retornos dos últimos 12 meses** e vende-se ações no **fundo do decil**.  
 - Essa abordagem pode ser expandida utilizando **outros fatores** além do retorno passado, como:  
   - **Fatores fundamentais**: crescimento de lucros, book-to-price ratio.  
   - **Fatores estatísticos**: Principal Component Analysis (PCA).  
 
-### **Cross-Sectional Factors em Futuros**  
+#### **Cross-Sectional Factors em Futuros**  
 - Modelos fatoriais podem ser aplicados a **portfólios de futuros**, considerando **fatores macroeconômicos** como **crescimento do PIB** ou **taxa de inflação**.  
 - PCA pode ser usado para identificar **componentes estatísticos ocultos** que explicam os retornos dos futuros.  
 
-### **Conclusão**  
+#### **Conclusão**  
 As estratégias **cross-sectional** são uma forma poderosa de capturar **momentum** e **roll returns**, permitindo a diversificação entre diferentes mercados. Apesar dos desafios enfrentados em **períodos de crise**, elas permanecem relevantes e podem ser aprimoradas com modelos fatoriais e técnicas avançadas de análise de dados.  
 """)
 
             st.divider()
             st.markdown("""
-**News Sentiment as a Fundamental Factor**
+### **News Sentiment as a Fundamental Factor**
 
 Com o avanço dos **newsfeeds programáveis** e da **análise de linguagem natural (NLP)**, tornou-se possível quantificar o impacto de notícias sobre ações por meio de **sentiment scores**. Esse fator fundamental pode ser utilizado para estratégias de **momentum cross-sectional**, aproveitando a **difusão lenta de informações** no mercado.
 
-### **Impacto do Sentimento das Notícias em Estratégias de Momentum**
+#### **Impacto do Sentimento das Notícias em Estratégias de Momentum**
 - Pesquisadores como **Hafez & Xie (2012)** demonstraram que estratégias baseadas no sentimento das notícias podem gerar retornos expressivos:  
   - **APR entre 52% e 156%** e **Sharpe Ratios de 3.9 a 5.3** (antes dos custos de transação).  
   - Estratégia: **comprar ações com mudanças positivas de sentimento** e **vender ações com mudanças negativas de sentimento**.  
 
-### **Fornecedores de News Sentiment Data**
+#### **Fornecedores de News Sentiment Data**
 - **RavenPack**: Um dos principais provedores de análise de sentimento baseada em notícias.  
 - **Outros fornecedores**:  
   - **Recorded Future**  
@@ -2109,18 +2295,18 @@ Com o avanço dos **newsfeeds programáveis** e da **análise de linguagem natur
 
 Caso um trader acredite possuir um **modelo de sentimento superior**, pode adquirir diretamente um **newsfeed elementizado** e aplicar seu próprio algoritmo.  
 
-### **Análise de Sentimento em Redes Sociais**  
+#### **Análise de Sentimento em Redes Sociais**  
 - Pesquisadores como **Bollen, Mao & Zeng (2010)** sugeriram que o **humor coletivo no Twitter** pode prever o comportamento de índices de mercado.  
 - Essa hipótese levou ao lançamento de **hedge funds baseados em análise de mídias sociais**, embora a validade dessas pesquisas tenha sido contestada.  
 
-### **Conclusão**  
+#### **Conclusão**  
 O **sentimento das notícias** oferece um fator adicional para estratégias quantitativas, permitindo explorar a **assimetria de informação e a lentidão na assimilação de notícias pelo mercado**. Apesar de desafios na implementação, a combinação de **NLP e análise de sentimentos** pode ser uma ferramenta poderosa para estratégias algorítmicas de momentum.  
 """)
 
             st.divider()
             # Outro
 
-        elif subsecao == "Pros and Cons of Momentum Strategies":
+        elif subsecao == "Prós e Contras das Estratégias de Momentum":
             
             st.markdown("""
 **Pros and Cons of Momentum Strategies**
@@ -2198,45 +2384,111 @@ Estratégias de momentum podem ser aplicadas em **diversos mercados**, aproveita
         if subsecao == "Introdução":
            
            st.markdown("""
-**Intraday Momentum Strategies**
+**Estratégias de Momentum Intradiário**
 
-No capítulo anterior, vimos que a maioria dos ativos financeiros, sejam **ações ou futuros**, apresentam **momentum tanto cross-sectional quanto time-series**. No entanto, esse momentum geralmente ocorre em **horizontes de tempo longos (um mês ou mais)**, o que cria dois problemas principais:
-1. **Baixos Sharpe Ratios e Significância Estatística**:  
-   - Sinais de negociação independentes são menos frequentes.  
-2. **Desempenho fraco após crises financeiras**:  
-   - Estratégias de longo prazo sofrem quedas significativas após períodos de turbulência econômica.  
+No capítulo anterior, constatamos que a maioria dos ativos financeiros – sejam **ações** ou **futuros** – apresenta momentum tanto em termos **cross-sectional** quanto **time-series**. Contudo, esse momentum tende a ocorrer em horizontes de tempo mais longos (um mês ou mais), o que gera dois problemas principais:
 
-### **Momentum Intradiário: Uma Solução para Esses Problemas**
-Este capítulo explora **estratégias de momentum intradiário**, que evitam os problemas das estratégias de longo prazo. Diferente do momentum tradicional, que pode ser impulsionado por fatores como **roll returns**, aqui a principal força motriz é a ação do preço dentro do mesmo dia.  
+1. **Baixo Sharpe Ratio e Significância Estatística**:  
+   - A escassez de sinais de negociação independentes reduz a eficácia das estratégias.
 
-### **Principais Causas do Momentum Intradiário**
-1. **Gatilho de Stop Loss e Breakout Strategies**  
-   - Stop orders acionadas em pontos de suporte e resistência criam **movimentos explosivos** no mercado.  
-   - Exemplos incluem **entradas no mercado na abertura** e operações intradiárias baseadas em **níveis técnicos**.  
+2. **Desempenho Deficiente em Períodos de Crise**:  
+   - Estratégias de longo prazo sofrem perdas acentuadas durante períodos de turbulência econômica.
+
+### **Momentum Intradiário: Uma Alternativa Eficaz**
+
+Este capítulo propõe o uso de **estratégias de momentum intradiário** para superar as limitações das abordagens tradicionais. Diferentemente do momentum de longo prazo – frequentemente influenciado por fatores como **roll returns** –, o foco aqui é a ação do preço ao longo do mesmo dia.
+
+### **Fatores Determinantes do Momentum Intradiário**
+
+1. **Ativação de Stop Loss e Estratégias de Breakout**  
+   - Ordens de stop acionadas em pontos de suporte e resistência podem desencadear movimentos explosivos.  
+   - Exemplos incluem entradas de mercado na abertura e operações baseadas em níveis técnicos.
 
 2. **Eventos Corporativos e Macroeconômicos**  
-   - Anúncios de **lucros, mudanças de recomendações de analistas e notícias macroeconômicas** geram **momentum de curtíssimo prazo**.  
-   - Pesquisas recentes mostram como diferentes tipos de eventos afetam o comportamento do mercado intradiário.  
+   - Anúncios de lucros, mudanças nas recomendações de analistas e notícias macroeconômicas estimulam um momentum de curtíssimo prazo.  
+   - Pesquisas recentes demonstram como esses eventos influenciam o comportamento intradiário dos mercados.
 
 3. **Rebalanceamento de ETFs Alavancados**  
-   - Fundos alavancados precisam ajustar suas posições diariamente, criando padrões previsíveis de **fluxo de ordens** e **momentum de curto prazo**.  
+   - A necessidade diária de ajuste das posições por parte dos fundos alavancados gera padrões previsíveis no fluxo de ordens, resultando em momentum de curto prazo.
 
-4. **Dinâmica do Order Flow e High-Frequency Trading (HFT)**  
-   - Desequilíbrios entre **ordens de compra e venda**, alterações no fluxo de ordens e a **distribuição desigual de stop orders** podem gerar movimentos rápidos de momentum.  
-   - Estratégias de **high-frequency trading (HFT)** exploram esses pequenos movimentos para gerar lucros consistentes.  
+4. **Dinâmica do Fluxo de Ordens e High-Frequency Trading (HFT)**  
+   - Desequilíbrios entre ordens de compra e venda, combinados com alterações no fluxo e concentração de stop orders, podem ocasionar movimentos rápidos.  
+   - Estratégias de HFT se aproveitam desses pequenos deslocamentos para obter lucros consistentes.
 
 ### **Conclusão**
-As **estratégias de momentum intradiário** oferecem uma alternativa viável para evitar os desafios das abordagens de longo prazo. Elas exploram **eventos corporativos, dinâmicas de fluxo de ordens e movimentos de stop loss**, proporcionando oportunidades de lucro com menor exposição ao risco macroeconômico.  
-""")
 
+As **estratégias de momentum intradiário** surgem como uma alternativa promissora para superar os desafios inerentes às abordagens de longo prazo. Ao explorar eventos corporativos, dinâmicas do fluxo de ordens e movimentos de stop loss, essas estratégias oferecem oportunidades de lucro com uma exposição reduzida aos riscos macroeconômicos.
+
+""")
 
         elif subsecao == "Opening Gap Strategy":
 
             st.markdown("""
-            Tape reading é uma técnica que envolve a leitura do fluxo de ordens e do livro de ofertas para prever movimentos de preços.
-            """)
-            mostrar_imagem("https://example.com/imagem_tape_reading.png", "Tape Reading")  
+  **Resumo da Estratégia de Momentum por Gap**
 
+  Diferente da estratégia de reversão à média para ações, esta abordagem foca em aproveitar os gaps de preço. A ideia é comprar quando o ativo apresenta gap de alta e vender (ou operar vendido) quando ocorre gap de baixa.
+
+- **Mecanismo de Acionamento:**  
+  Os gaps resultam de períodos prolongados sem negociação, o que pode gerar uma diferença expressiva entre os preços de fechamento e de abertura. Esse cenário provoca o disparo simultâneo de ordens stop, criando um efeito cascata que intensifica o movimento de preço.
+  Eventos importantes que ocorrem durante esses períodos também podem contribuir para a formação de gaps e para a geração de momentum.
+                        
+- **Aplicação em Futuros:**  
+  A estratégia tem sido aplicada com sucesso em futuros, demonstrando bom desempenho quando o gap ocorre entre o fechamento e a abertura do mercado, impulsionando os movimentos de preço.
+
+- **Aplicação em Moedas:**  
+  Para moedas, é necessário redefinir os horários de abertura e fechamento do mercado. A estratégia se aproveita do gap gerado pelo período em que o mercado está fechado (por exemplo, do final de semana) para capturar movimentos significativos na abertura.
+
+A estratégia de momentum por gap busca explorar os movimentos abruptos entre o fechamento e a abertura do mercado, seja em futuros ou em moedas, capturando oportunidades de lucro a partir do efeito cascata das ordens stop e de eventos relevantes.
+
+            """)
+
+            colab_link = "https://colab.research.google.com/drive/1s9QKpA72ZDvngGyvqkb44A7JuyPsYhbA?usp=sharing"  # Coloque o link do Colab aqui
+            st.markdown(f"[Clique aqui para editar no Colab]({colab_link})")
+
+            st.divider()
+            
+        elif subsecao == "News Sentiment":
+
+            st.markdown("""
+### **Post-Earnings Announcement Drift - (PEAD)**
+
+- **Conceito Básico:**  
+  - Acredita-se que o momentum é impulsionado pela lenta difusão das notícias. Assim, é possível se beneficiar dos primeiros momentos — horas ou até segundos — após um evento relevante, como anúncios de lucros.
+
+- **Dinâmica do PEAD:**  
+  - Após o anúncio dos lucros, os preços das ações se movem de forma persistente na mesma direção do movimento inicial, permitindo que traders capturem esse drift sem precisar julgar se os resultados foram “bons” ou “ruins”.
+  - A estratégia consiste em entrar na posição no início do dia seguinte ao anúncio (comprando se o retorno for muito positivo e vendendo se for muito negativo) e liquidá-la ao final do mesmo dia.
+
+- **Implementação Prática:**  
+  - É essencial dispor de dados históricos precisos dos horários dos anúncios de lucros para identificar corretamente os eventos ocorridos após o fechamento do dia anterior e antes da abertura do dia atual.
+  - O critério para entrar na operação envolve medir a volatilidade dos retornos (por exemplo, utilizando a média móvel da volatilidade) e selecionar apenas os anúncios que surpreendem o mercado.
+
+- **Resultados e Observações:**  
+  - Em testes com um universo de ações, a estratégia PEAD demonstrou resultados positivos, com retornos consistentes e Sharpe ratio robusto.
+  - A alavancagem pode ser utilizada para potencializar os ganhos diários.
+  - Manter as posições durante a noite não agrega valor, pois os retornos noturnos costumam ser negativos.  
+  - O fenômeno, estudado desde 1968, pode ter tido sua duração encurtada devido ao aumento da conscientização do mercado sobre essa vantagem.
+
+            """)
+            st.divider()
+
+            st.markdown("""
+    ### **Drift Decorrente de Outros Eventos**
+
+- **Outros Eventos Corporativos:**  
+  - Além dos anúncios de lucros, outros eventos como orientações de lucro, mudanças de ratings de analistas, dados de vendas em lojas e fatores de carga aérea também podem gerar drift pós-anúncio.
+  - Qualquer evento que leve a uma reavaliação do valor justo de uma empresa tende a provocar um movimento no preço da ação em direção a um novo equilíbrio.
+
+- **Fusões e Aquisições (M&A):**  
+  - Apesar de serem analisados profundamente por fundos especializados, modelos técnicos simples podem capturar drift pós-anúncio em M&A, demonstrando retornos positivos mesmo em cenários contrários à crença comum.
+
+- **Rebalanceamento de Índices:**  
+  - Alterações na composição de índices provocam pressão de compra ou venda imediata, gerando momentum, cujo efeito se restringiu a um período intradiário nos últimos anos.
+
+- **Eventos Macroeconômicos:**  
+  - Testes em EURUSD não indicaram momentum significativo para eventos como decisões de taxa de juros ou divulgação do índice de preços ao consumidor.
+  - Em contraste, dados macroeconômicos do Reino Unido e anúncios do Banco da Inglaterra mostraram gerar momentum no GBPUSD por alguns minutos, embora a duração desse efeito possa ter sido reduzida com o tempo.
+""")
 
         elif subsecao == "Leveraged ETF Strategy":
             st.markdown("""
@@ -2244,13 +2496,13 @@ As **estratégias de momentum intradiário** oferecem uma alternativa viável pa
 
 ETFs alavancados possuem uma dinâmica de **reequilíbrio diário**, que pode gerar **momentum previsível no mercado**, especialmente próximo ao fechamento. Como esses ETFs precisam **manter uma alavancagem constante** (por exemplo, 3×), eles realizam **compras e vendas forçadas** dependendo da variação diária do mercado.
 
-### **Como o Rebalanceamento dos ETFs Gera Momentum?**
+#### **Como o Rebalanceamento dos ETFs Gera Momentum?**
 - Se o **índice subjacente cai**, o ETF **precisa vender ações** para manter a alavancagem.  
 - Se o **índice sobe**, o ETF **precisa comprar mais ações**.  
 - Como esses ETFs movimentam **centenas de milhões de dólares**, essa atividade gera **momentum significativo próximo ao fechamento**.  
 - ETFs **long** e **short** são afetados igualmente, pois ETFs inversos também precisam ajustar posições.  
 
-### **Estratégia de Momentum Baseada em ETFs Alavancados**
+#### **Estratégia de Momentum Baseada em ETFs Alavancados**
 - **Ativo:** DRN (ETF alavancado 3× de real estate).  
 - **Sinal de Entrada:**  
   - **Comprar** DRN se o retorno desde o fechamento do dia anterior até **15 minutos antes do fechamento** for **maior que +2%**.  
@@ -2260,55 +2512,103 @@ ETFs alavancados possuem uma dinâmica de **reequilíbrio diário**, que pode ge
   - **APR: 15%**  
   - **Sharpe Ratio: 1.8**  
 
-### **Impacto do Crescimento dos ETFs Alavancados**
+#### **Impacto do Crescimento dos ETFs Alavancados**
 - Em **janeiro de 2009**, os ETFs alavancados (long e short) tinham um **AUM total de US$ 19 bilhões**.  
 - Um **movimento de 1% no S&P 500 pode gerar operações equivalentes a 17% do volume de fechamento**, impactando o mercado (Cheng & Madhavan, 2009).  
 - Estudos mais recentes **confirmam esse efeito** (Rodier, Haryanto, Shum & Hejazi, 2012).  
 
-### **O Papel do Fluxo de Investimentos nos ETFs**
+#### **O Papel do Fluxo de Investimentos nos ETFs**
 - Grandes **aportes em ETFs long alavancados** criam **momentum positivo** nas ações subjacentes.  
 - Grandes **aportes em ETFs inversos (short)** criam **momentum negativo**.  
 - Apesar da possibilidade de **neutralização do efeito por investidores realizando lucros**, os backtests mostram que **o momentum persiste**.  
 
-### **Conclusão**
 Os **ETFs alavancados criam oportunidades previsíveis de momentum próximo ao fechamento**, devido ao **reequilíbrio obrigatório das posições**. À medida que esses ETFs **crescem em tamanho**, seu impacto no mercado pode **se tornar ainda mais relevante** para estratégias de trading.  
 """)
 
+            
+            colab_link = "https://colab.research.google.com/drive/1s9QKpA72ZDvngGyvqkb44A7JuyPsYhbA?usp=sharing"  # Coloque o link do Colab aqui
+            st.markdown(f"[Clique aqui para editar no Colab]({colab_link})")
 
+            st.divider()
+ 
         elif subsecao == "Estratégias de Alta Frequência":
-            st.markdown("""
-                # **Estratégias de Alta Frequência**
+          st.markdown("""
+                      
+### **Estratégias de Alta Frequência (HFT)**  
 
-                As estratégias de alta frequência (HFT) aproveitam padrões de curto prazo no mercado, utilizando informações do **livro de ordens**, **fluxo de ordens** e **movimentos de stop orders**. Essas estratégias exigem acesso a **dados de mercado detalhados** e **execução rápida**, sendo amplamente usadas em ações, futuros e moedas.  
+As estratégias de alta frequência (HFT) exploram **padrões de curto prazo** no mercado, baseando-se em **livro de ordens, fluxo de ordens e stop orders**. Elas exigem **dados detalhados** e **execução extremamente rápida**, sendo amplamente aplicadas em ações, futuros e moedas.  
 
-                ## **Desequilíbrio entre Oferta e Demanda**  
-                Pesquisas mostram que há uma relação linear entre o **desequilíbrio no livro de ordens** e mudanças de preço de curto prazo. Se o **tamanho do bid** for muito maior que o **ask**, há maior probabilidade de o preço subir e vice-versa. Esse efeito é mais forte para ações de **baixo volume**.  
+---
 
-                ## **Ratio Trade (Pro-Rata Fills)**  
-                Em mercados que preenchem ordens proporcionalmente ao tamanho delas (como o **Eurodollar** no CME), os traders podem se beneficiar simplesmente entrando no **melhor bid**. Assim, sempre que há preenchimento de ordens no bid, o trader recebe uma parte da execução. Quando o preço sobe, ele pode vender no **ask** para obter lucro.  
+#### **Desequilíbrio entre Oferta e Demanda**  
+Pesquisas indicam que existe uma **relação linear** entre o desequilíbrio no **livro de ordens** e mudanças de preço de curto prazo.  
+- Se o **tamanho do bid** for muito maior que o **ask**, há maior chance de o preço subir.  
+- Se o **ask** for maior, a tendência é de queda.  
+- Esse efeito é **mais forte** em ações de **baixo volume**.  
 
-                ## **Ticking ou Quote Matching**  
-                Se o **spread bid-ask** for maior que dois ticks, um trader pode colocar uma **ordem de compra um tick acima do bid** e uma **ordem de venda um tick abaixo do ask**. Caso ambas sejam executadas, o trader captura um lucro com base no spread.  
+---
 
-                ## **Momentum Ignition (Criação de Pressão Artificial de Compra/Venda)**  
-                Essa estratégia consiste em manipular o mercado colocando uma **grande ordem de compra no bid** para criar a impressão de uma forte pressão de compra, enquanto simultaneamente coloca uma **pequena ordem de venda no ask**. Assim, outros traders compram acreditando em uma alta iminente, preenchendo a venda do manipulador. Após isso, ele cancela a grande ordem de compra e recompra as ações mais baratas quando os traders percebem que foram enganados.  
+#### **Ratio Trade (Pro-Rata Fills)**  
+Alguns mercados, como o **Eurodollar** no CME, preenchem ordens proporcionalmente ao tamanho delas.  
+- O trader pode entrar no **melhor bid** para garantir uma fração da execução sempre que houver um preenchimento no bid.  
+- Se o preço subir, ele vende no **ask**, lucrando com o spread.  
 
-                ## **Flipping**  
-                Os traders podem **explorar sinais falsos** gerados por outras HFTs. Se um grande bid aparece no livro de ordens, mas nunca é preenchido, pode indicar uma tentativa de manipulação (*momentum ignition*). Nesse caso, um trader pode vender a esse bid e forçar a queda do preço, levando os manipuladores a saírem de suas posições com prejuízo.  
+---
 
-                ## **Stop Hunting (Caça a Stops)**  
-                O mercado geralmente apresenta **níveis de suporte e resistência** onde muitos traders colocam suas ordens de stop. Quando o preço se aproxima desses pontos, HFTs podem criar uma **pressão artificial** para romper os suportes, ativar stops e ampliar o movimento. Após essa movimentação forçada, o preço tende a se estabilizar e os traders podem lucrar fechando suas posições.  
+#### **Ticking ou Quote Matching**  
+Se o **spread bid-ask** for **maior que dois ticks**, um trader pode:  
+1. Colocar uma **compra um tick acima do bid**.  
+2. Vender **um tick abaixo do ask**.  
+3. Se ambas forem executadas, o trader captura o lucro com base no spread.  
 
-                ## **Monitoramento de Fluxo de Ordens (Order Flow Trading)**  
-                O **fluxo de ordens** representa o volume líquido de compras e vendas em tempo real. Traders de alta frequência monitoram **ordens grandes e unidirecionais** (por exemplo, ordens de hedge funds reagindo a notícias), pois essas transações indicam **novas informações no mercado**. Market makers ajustam seus preços rapidamente com base nesses fluxos, e HFTs podem antecipar essas mudanças ao monitorar os **dados detalhados das exchanges** (como os feeds ITCH da Nasdaq e PITCH da BATS).  
+**Risco:** Se a compra for executada, mas a venda não, o trader pode ser forçado a liquidar a posição a um preço inferior.  
 
-                ---
+---
 
-                # **Conclusão**  
-                As estratégias de HFT são altamente sofisticadas e exigem tecnologia avançada. Elas exploram **ineficiências momentâneas do mercado**, sendo lucrativas principalmente contra traders mais lentos. No entanto, a popularização dessas estratégias reduziu os **tamanhos das ordens visíveis**, tornando o mercado **mais fragmentado** e aumentando a competição entre os próprios traders de alta frequência.
+#### **Momentum Ignition (Criação de Pressão Artificial de Compra/Venda)**  
+Traders podem **manipular o mercado** criando **falsa pressão de compra ou venda**:  
+1. Colocam uma **grande ordem de compra no bid**, atraindo traders que esperam alta.  
+2. Simultaneamente, colocam uma **pequena ordem de venda no ask**, que é executada.  
+3. Depois, **cancelam a grande ordem de compra**, gerando pânico e forçando traders a venderem a um preço mais baixo.  
 
-            """)
+---
 
+#### **Flipping (Revertendo Manipulação de Outros Traders)**  
+Se um trader suspeitar que uma **grande ordem de compra** é falsa (*momentum ignition*), ele pode:  
+1. **Vender contra a ordem manipulada**.  
+2. Se o manipulador cancelar sua ordem, o preço pode cair, e o trader compra de volta mais barato.  
+3. Isso força o manipulador a sair de sua posição com prejuízo.  
+
+Para detectar manipulação, traders podem monitorar **cancelamentos frequentes de ordens grandes** por meio de feeds privados das exchanges (*ITCH da Nasdaq, PITCH da BATS, etc.*).  
+
+---
+
+#### **Stop Hunting (Caça a Stops)**  
+HFTs exploram **níveis de suporte e resistência**, onde muitos traders colocam ordens de **stop-loss**.  
+1. Criam **pressão artificial** para romper um suporte.  
+2. Ativam stops de venda, forçando o preço ainda mais para baixo.  
+3. Compram as posições liquidadas a preços menores, lucrando quando o preço estabiliza.  
+
+Esse comportamento gera **momentum de curto prazo**, especialmente no mercado de moedas e futuros.  
+
+---
+
+#### **Monitoramento de Fluxo de Ordens (Order Flow Trading)**  
+O **fluxo de ordens** representa o volume líquido de compras e vendas em tempo real.  
+- HFTs monitoram **grandes ordens unidirecionais** (ex.: hedge funds reagindo a notícias), pois isso sinaliza **novas informações no mercado**.  
+- **Market makers ajustam seus preços** rapidamente ao detectar ordens grandes, e os traders de alta frequência podem antecipar essas mudanças.  
+
+Ferramentas como **ITCH da Nasdaq e PITCH da BATS** permitem acesso detalhado ao histórico de ordens, ajudando a identificar **flippers e manipulação de mercado**.  
+
+---
+
+As estratégias de **HFT** são sofisticadas e exploram **ineficiências momentâneas do mercado**, obtendo lucros contra **traders mais lentos**. No entanto, a crescente competição:  
+- **Reduziu os tamanhos das ordens visíveis**.  
+- **Fragmentou o mercado**.  
+- **Diminuiu as margens de lucro** entre os próprios traders de alta frequência.  
+
+A evolução da tecnologia continuará moldando esse ambiente, tornando-o cada vez mais desafiador para novos participantes.  
+""")
 
         elif subsecao == "Conclusão":
             st.markdown("""
@@ -2316,22 +2616,21 @@ Os **ETFs alavancados criam oportunidades previsíveis de momentum próximo ao f
 
 As estratégias de momentum intradiário **não sofrem com muitas das desvantagens** das estratégias de momentum interdiário, mas ainda **mantêm algumas vantagens importantes**.  
 
-### **Tipos de Estratégias de Momentum**
+#### **Tipos de Estratégias de Momentum**
 - **Estratégias de "Breakout"** ocorrem quando o preço **ultrapassa um intervalo de negociação**.  
 - A **estratégia de gap na abertura** é um tipo de breakout que funciona para **alguns futuros e moedas**.  
 - O momentum de breakout pode ser causado pela **ativação de ordens de stop**.  
 
-### **Fatores que Induzem Momentum de Curto Prazo**
+#### **Fatores que Induzem Momentum de Curto Prazo**
 - **Notícias corporativas e macroeconômicas** frequentemente geram **momentum de curto prazo** nos preços.  
 - Mudanças na **composição de índices** criam momentum nas ações que são **adicionadas ou removidas** do índice.  
 - O **reequilíbrio dos ETFs alavancados** perto do fechamento **gera momentum na mesma direção do retorno do mercado desde o fechamento anterior**.  
 
-### **Momentum de Alta Frequência e Fluxo de Ordens**
+#### **Momentum de Alta Frequência e Fluxo de Ordens**
 - Muitas estratégias de momentum de **alta frequência** envolvem **desequilíbrio entre os tamanhos do bid e ask**, um desequilíbrio que às vezes é **artificialmente criado pelos próprios traders de alta frequência**.  
 - **Stop hunting** é uma estratégia de **trading de alta frequência** que visa **acionar ordens de stop**, geralmente próximas a **números redondos** perto do preço de mercado.  
 - O **fluxo de ordens** pode prever **movimentos de preço de curto prazo na mesma direção**.  
 
-### **Conclusão**
 As estratégias de momentum intradiário oferecem **vantagens sobre as estratégias interdiárias**, aproveitando fatores como **breakouts, gaps de abertura, mudanças em índices e reequilíbrio de ETFs alavancados**. Além disso, o **trading de alta frequência** desempenha um papel significativo na criação e exploração do momentum de curto prazo.  
 """)
 
@@ -2445,14 +2744,12 @@ As estratégias de momentum intradiário oferecem **vantagens sobre as estratég
 
             st.latex(r"g(f) = \langle \log(1 + fR) \rangle")
 
-            st.write("""
-            Onde \( R(t) \) é o retorno diário (ou em qualquer período definido) da estratégia, e \( \langle ... \rangle \) representa a média sobre amostras aleatórias da distribuição de \( R \). Se a distribuição for Gaussiana, a fórmula se reduz a:
-
-            """)
-
+            st.markdown(
+    r"Onde \( R(t) \) é o retorno diário (ou em qualquer período definido) da estratégia, e $\langle ... \rangle$ representa a média sobre amostras aleatórias da distribuição de \( R \). Se a distribuição for Gaussiana, a fórmula se reduz a:"
+)
             st.latex(r"g(f) = fm - \frac{f^2 m^2}{2}")
 
-            st.write("""
+            st.write(r"""
             Essa fórmula é equivalente à da alavancagem de Kelly em distribuições Gaussianas, onde o máximo de \( g(f) \) pode ser encontrado derivando a equação com relação a \( f \) e igualando a zero. No entanto, para distribuições não-Gaussianas, como as modeladas pelo sistema de Pearson, a solução analítica pode ser impossível.
 
             O **Sistema de Pearson** utiliza a média, desvio padrão, assimetria e curtose da distribuição empírica para ajustá-la a uma das sete distribuições parametrizadas, incluindo Gaussiana, beta, gamma e Student's t. Embora não capture todos os momentos superiores ou distribuições infinitas, é suficiente para evitar viés por excesso de ajuste em dados limitados.
@@ -2764,7 +3061,15 @@ print(f"Retorno final: {final_return}%")
         st.write("""
                  
 1. CHAN, Ernie. Algorithmic trading: winning strategies and their rationale. John Wiley & Sons, 2013.
-2. https://github.com/AnjayGoel/algorithmic-trading/tree/master       
+2. https://github.com/AnjayGoel/algorithmic-trading/tree/master
+3. Moskowitz, Tobias, Hua Ooi Yao, and Lasse Heje Pedersen. “Time Series Momentum.” Journal of Financial Economics 104, no. 2 (2012): 228–250.
+4. Chan, Ernest P. Quantitative Trading: How to Build Your Own Algorithmic Trading Business. John Wiley & Sons, 2009.
+5. Daniel, Ken, and Tobias Moskowitz. “Momentum Crashes.” Preprint, 2011. Available at www.columbia.edu/~kd2371/papers/unpublished
+/mom4.pdf..
+6. Hafez, Peter A., and Junqiang Xie. “Short-Term Stock Selection Using News Based Indicators,” May 15, 2012, www.ravenpack.com/research/shorttermstockselectionpaperform.htm.
+7. Bollen, Johan, Huina Mao, and Xiao-Jun Zeng. “Twitter Mood Predicts the Stock Market,” 2010. Available at http://arxiv.org/pdf/1010.3003.pdf.
+
+           
         
         """)
 
@@ -2772,20 +3077,22 @@ print(f"Retorno final: {final_return}%")
 
 
 
-# Se o modo for "Chat", "Debug" ou "Configuração", o conteúdo é carregado a partir dos arquivos
+
 elif mode == "Chat":
-    chat_option = st.sidebar.radio("Opções de Chat:", options=["Conversar", "Configurações", "Debug"], index=0)
+    chat_option = st.sidebar.radio(
+        "Opções de Chat:", options=["Conversar", "Configurações", "Debug"], index=0
+    )
+
+    def run_streamlit_script(path):
+        try:
+            runpy.run_path(path, run_name="__main__")
+        except Exception as e:
+            st.error(f"Erro ao executar o arquivo '{path}': {e}")
 
     if chat_option == "Conversar":
-        with open("pag/chat.py", encoding="utf-8") as file:
-                exec(file.read())
-
+        run_streamlit_script("pag/chat.py")
     elif chat_option == "Configurações":
-        # Exibe o conteúdo de configurações
-        with open("pag/02_Configuração.py", encoding="utf-8") as file:
-            exec(file.read())
-
+        run_streamlit_script("pag/02_Configuração.py")
     elif chat_option == "Debug":
-        # Exibe o conteúdo de debug
-        with open("pag/01_Debug.py", encoding="utf-8") as file:
-            exec(file.read())
+        run_streamlit_script("pag/01_Debug.py")
+
